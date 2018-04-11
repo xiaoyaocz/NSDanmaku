@@ -1,0 +1,49 @@
+﻿<Page
+    x:Class="NSDanmakuDemo.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:NSDanmakuDemo"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid  Background="Gray">
+        <Grid x:Name="gv">
+            <Grid x:Name="grid_Roll">
+
+            </Grid>
+            <Grid x:Name="grid_Top" >
+
+            </Grid>
+
+            <Grid x:Name="grid_Bottom" Grid.Row="1" >
+
+            </Grid>
+        </Grid>
+       
+
+        <TextBlock x:Name="tb_test" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="25" Foreground="White">2333333</TextBlock>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="btn_AddDanmu" Click="btn_AddDanmu_Click"  Foreground="White">滚动弹幕</Button>
+            <Button x:Name="btn_AddTopDanmu" Click="btn_AddTopDanmu_Click"  Foreground="White">顶部弹幕</Button>
+            <Button x:Name="btn_AddBottomDanmu" Click="btn_AddBottomDanmu_Click"  Foreground="White">底部弹幕</Button>
+            
+            <Button x:Name="btn_Pause" Click="btn_Pause_Click"  Foreground="White">暂停弹幕</Button>
+            <Button x:Name="btn_Next" Click="btn_Next_Click"  Foreground="White">继续弹幕</Button>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" VerticalAlignment="Bottom">
+            <AppBarButton x:Name="btn_LoadDanmu" Click="btn_LoadDanmu_Click" Width="48" Height="48" Icon="OpenFile" Foreground="White"></AppBarButton>
+            <AppBarButton x:Name="btn_PlayTest" Click="btn_PlayTest_Click" Width="48" Height="48" Icon="Play" Foreground="White"></AppBarButton>
+            <AppBarButton x:Name="btn_PauseTest" Click="btn_PauseTest_Click" Width="48" Height="48" Icon="Pause" Foreground="White"></AppBarButton>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <CheckBox x:Name="check_Bottom" Checked="check_Bottom_Checked" Unchecked="check_Bottom_Unchecked">防挡字幕</CheckBox>
+            <TextBlock>速度<Run Text="{Binding ElementName=slider_speed,Path=Value}"></Run></TextBlock>
+            <Slider Width="300" ValueChanged="slider_speed_ValueChanged" Minimum="1" Maximum="30" Value="10" x:Name="slider_speed"></Slider>
+            <TextBlock>字体缩放<Run Text="{Binding ElementName=slider_size,Path=Value}"></Run></TextBlock>
+            <Slider Width="300" ValueChanged="slider_size_ValueChanged" Minimum="0.1" Maximum="2" Value="1" x:Name="slider_size" StepFrequency="0.05"></Slider>
+            <TextBlock>透明度<Run Text="{Binding ElementName=slider_tran,Path=Value}"></Run></TextBlock>
+            <Slider Width="300" ValueChanged="slider_tran_ValueChanged" Minimum="0.1" Maximum="1" Value="1" x:Name="slider_tran" StepFrequency="0.1"></Slider>
+        </StackPanel>
+    </Grid>
+</Page>
