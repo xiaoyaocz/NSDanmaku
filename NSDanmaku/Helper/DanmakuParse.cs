@@ -88,7 +88,5 @@ namespace NSDanmaku.Helper
             return ls;
 
         }
-
-
     }
 }

@@ -23,10 +23,15 @@ namespace NSDanmaku
         }
         public static Color ToColor(this string obj)
         {
-            
+
             obj = obj.Replace("#", "");
             obj = Convert.ToInt32(obj).ToString("X2");
+
             Color color = new Color();
+            if (obj.Length==4)
+            {
+                obj = "00" + obj;
+            }
             if (obj.Length == 6)
             {
                 color.R = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
@@ -41,6 +46,7 @@ namespace NSDanmaku
                 color.B = byte.Parse(obj.Substring(6, 2), System.Globalization.NumberStyles.HexNumber);
                 color.A = byte.Parse(obj.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
             }
+           
             return color;
         }
 
