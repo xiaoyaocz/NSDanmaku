@@ -15,9 +15,19 @@ namespace NSDanmaku.Helper
         public async Task<List<NSDanmaku.Model.DanmakuModel>> ParseBiliBili(long cid)
         {
             WebHelper webHelper = new WebHelper();
-            string danmuStr = await webHelper.GetResults(new Uri(string.Format("https://comment.bilibili.com/{0}.xml",cid)));
+            string danmuStr = await webHelper.GetResults(new Uri(string.Format("https://api.bilibili.com/x/v1/dm/list.so?oid={0}", cid)));
             return ParseBiliBiliXml(danmuStr);
         }
+
+        public async Task<string> GetBiliBili(long cid)
+        {
+
+            WebHelper webHelper = new WebHelper();
+            string danmuStr = await webHelper.GetResults(new Uri(string.Format("https://api.bilibili.com/x/v1/dm/list.so?oid={0}", cid)));
+            return danmuStr;
+        }
+
+
         public List<NSDanmaku.Model.DanmakuModel> ParseBiliBili(string xml)
         {
             return ParseBiliBiliXml(xml);
@@ -54,6 +64,9 @@ namespace NSDanmaku.Helper
                         var location = DanmakuLocation.Roll;
                         switch (haha[1])
                         {
+                            case "7":
+                                location = DanmakuLocation.Position;
+                                break;
                             case "4":
                                 location = DanmakuLocation.Bottom;
                                 break;

@@ -4,26 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace NSDanmaku.Model
 {
     public enum DanmakuLocation
     {
-        Roll,//滚动
-        Top,//顶部
-        Bottom,//底部
-        Other//其他类型，如高级弹幕自定义位置
+        /// <summary>
+        /// 滚动弹幕Model1-3
+        /// </summary>
+        Roll,
+        /// <summary>
+        /// 顶部弹幕Model5
+        /// </summary>
+        Top,
+        /// <summary>
+        /// 底部弹幕Model4
+        /// </summary>
+        Bottom,
+        /// <summary>
+        /// 定位弹幕Model7
+        /// </summary>
+        Position,
+        /// <summary>
+        /// 其它暂未支持的类型
+        /// </summary>
+        Other
     }
     public enum DanmakuSite
     {
         Bilibili,
-        Acfun
+        Acfun,
+        Tantan
     }
     public enum DanmakuBorderStyle
     {
         Default,
         NoBorder,
-        Shadow
+        Shadow,
+        BorderV2
     }
     public enum DanmakuMode
     {
@@ -66,11 +85,20 @@ namespace NSDanmaku.Model
         /// </summary>
         public DanmakuLocation location
         {
-            get;set;
+            get; set;
         }
 
         public DanmakuSite fromSite { get; set; }
 
         public string source { get; set; }
+
+
+        public SolidColorBrush colorBrush
+        {
+            get
+            {
+                return new SolidColorBrush(color);
+            }
+        }
     }
 }

@@ -32,6 +32,7 @@
             </StackPanel>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12">
+            <CheckBox x:Name="ck_HideRoll" Checked="ck_HideRoll_Checked" Unchecked="ck_HideRoll_Unchecked">隐藏滚动弹幕</CheckBox>
             <CheckBox x:Name="ck_noblockSubtitle" IsChecked="{Binding ElementName=danmaku,Path=notHideSubtitle,Mode=TwoWay}" >防挡字幕</CheckBox>
             <TextBlock>大小缩放 <Run Text="{Binding ElementName=slider_zoom,Path=Value}"></Run></TextBlock>
             <Slider x:Name="slider_zoom" Value="{Binding ElementName=danmaku,Path=sizeZoom,Mode=TwoWay}" Width="200" StepFrequency="0.05"  Maximum="2" Minimum="0.1"></Slider>

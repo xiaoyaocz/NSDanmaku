@@ -134,5 +134,15 @@ namespace Demo
             var ls = danmaku.GetDanmakus();
             Debug.WriteLine("Count:" + ls.Count);
         }
+
+        private void ck_HideRoll_Checked(object sender, RoutedEventArgs e)
+        {
+            danmaku.HideDanmaku(NSDanmaku.Model.DanmakuLocation.Roll);
+        }
+
+        private void ck_HideRoll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            danmaku.ShowDanmaku(NSDanmaku.Model.DanmakuLocation.Roll);
+        }
     }
 }

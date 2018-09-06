@@ -56,5 +56,15 @@ namespace NSDanmaku
 
             return obj;
         }
+        /// <summary>
+        /// 读取系统字体列表
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetSystemFontFamilies()
+        {
+            string[] fonts = Microsoft.Graphics.Canvas.Text.CanvasTextFormat.GetSystemFontFamilies();
+            return fonts.ToList();
+        }
+
     }
 }

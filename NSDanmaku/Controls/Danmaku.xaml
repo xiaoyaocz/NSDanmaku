@@ -11,15 +11,19 @@
 
     <Grid x:Name="gv">
         <TextBlock x:Name="tb_test" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="25" Foreground="White"></TextBlock>
-        <Grid x:Name="grid_Roll">
+        <Canvas x:Name="canvas">
+         
+        </Canvas>
+        <Grid x:Name="grid_Roll" >
 
         </Grid>
         <Grid x:Name="grid_Top" >
 
         </Grid>
 
-        <Grid x:Name="grid_Bottom"  >
+        <Grid x:Name="grid_Bottom" >
 
         </Grid>
+      
     </Grid>
 </UserControl>
