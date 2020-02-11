@@ -180,6 +180,25 @@ namespace NSDanmaku.Controls
 
 
 
+
+        public int BorderStyle
+        {
+            get { return (int)GetValue(BorderStyleProperty); }
+            set { SetValue(BorderStyleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for BorderStyle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BorderStyleProperty =
+            DependencyProperty.Register("BorderStyle", typeof(int), typeof(Danmaku), new PropertyMetadata(0, new PropertyChangedCallback((d, args) =>
+            {
+                var control= d as Danmaku;
+                control.borderStyle = (DanmakuBorderStyle)args.NewValue;
+            })));
+
+
+
+
+
         /// <summary>
         /// 弹幕动画管理
         /// </summary>
@@ -358,7 +377,7 @@ namespace NSDanmaku.Controls
             {
                 tx.FontWeight = FontWeights.Bold;
             }
-            if (font!="")
+            if (font != "")
             {
                 tx.FontFamily = new FontFamily(font);
             }
@@ -590,7 +609,7 @@ namespace NSDanmaku.Controls
             var rows = 0;
 
             var max = grid_Roll.RowDefinitions.Count;
-            if (notHideSubtitle )
+            if (notHideSubtitle)
             {
                 max = grid_Roll.RowDefinitions.Count / 2;
             }
@@ -702,11 +721,12 @@ namespace NSDanmaku.Controls
 
             moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
             {
-
                 grid_Roll.Children.Remove(grid);
+                grid.Children.Clear();
                 grid = null;
                 rollStoryList.Remove(moveStoryboard);
-
+                moveStoryboard.Stop();
+                moveStoryboard = null;
             });
             moveStoryboard.Begin();
 
@@ -838,12 +858,39 @@ namespace NSDanmaku.Controls
             moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
             {
                 grid_Roll.Children.Remove(grid);
+                grid.Children.Clear();
                 grid = null;
                 rollStoryList.Remove(moveStoryboard);
+                moveStoryboard.Stop();
+                moveStoryboard = null;
 
             });
             moveStoryboard.Begin();
         }
+
+        public void AddDanmu(DanmakuModel m, bool own)
+        {
+            switch (m.location)
+            {
+                case DanmakuLocation.Roll:
+                    AddRollDanmu(m, own);
+                    break;
+                case DanmakuLocation.Top:
+                    AddTopDanmu(m, own);
+                    break;
+                case DanmakuLocation.Bottom:
+                    AddBottomDanmu(m, own);
+                    break;
+                case DanmakuLocation.Position:
+                    AddPositionDanmu(m);
+                    break;
+                default:
+                    AddRollDanmu(m, own);
+                    break;
+            }
+        }
+
+
         /// <summary>
         ///  添加顶部弹幕
         /// </summary>
@@ -906,8 +953,12 @@ namespace NSDanmaku.Controls
             moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
             {
                 grid_Top.Children.Remove(grid);
+                grid.Children.Clear();
                 grid = null;
                 topBottomStoryList.Remove(moveStoryboard);
+                moveStoryboard.Stop();
+                moveStoryboard = null;
+
             });
             moveStoryboard.Begin();
         }
@@ -965,8 +1016,11 @@ namespace NSDanmaku.Controls
             moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
             {
                 grid_Bottom.Children.Remove(grid);
+                grid.Children.Clear();
                 grid = null;
                 topBottomStoryList.Remove(moveStoryboard);
+                moveStoryboard.Stop();
+                moveStoryboard = null;
             });
             moveStoryboard.Begin();
         }

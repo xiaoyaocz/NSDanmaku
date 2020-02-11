@@ -80,6 +80,7 @@ namespace NSDanmaku.Helper
                         ls.Add(new DanmakuModel
                         {
                             time = double.Parse(haha[0]),
+                            time_s = Convert.ToInt32(double.Parse(haha[0])),
                             location = location,
                             size = double.Parse(haha[2]),
                             color = haha[3].ToColor(),
@@ -92,8 +93,9 @@ namespace NSDanmaku.Helper
                             fromSite = DanmakuSite.Bilibili
                         });
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        throw;
                     }
 
                 }

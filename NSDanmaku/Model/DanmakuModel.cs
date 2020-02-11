@@ -39,10 +39,10 @@ namespace NSDanmaku.Model
     }
     public enum DanmakuBorderStyle
     {
-        Default,
-        NoBorder,
-        Shadow,
-        BorderV2
+        Default=0,
+        NoBorder=1,
+        Shadow=2,
+        BorderV2=3
     }
     public enum DanmakuMode
     {
@@ -64,6 +64,11 @@ namespace NSDanmaku.Model
         /// 弹幕出现时间
         /// </summary>
         public double time { get; set; }
+
+        /// <summary>
+        /// 弹幕出现时间
+        /// </summary>
+        public int time_s{ get; set; }
         /// <summary>
         /// 弹幕发送时间
         /// </summary>
