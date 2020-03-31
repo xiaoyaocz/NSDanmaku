@@ -49,7 +49,7 @@ namespace NSDanmaku.Helper
           
             XmlDocument xdoc = new XmlDocument();
             //处理下特殊字符
-            xmlStr = Regex.Replace(xmlStr, @"[\x00-\x08]|[\x0B-\x0C]|[\x0E-\x1F]", "");
+            xmlStr = Regex.Replace(xmlStr, @"[\x00-\x08]|[\x0B-\x0C]|[\x0E-\x1F]|[\uFFFF]", "");
             xdoc.LoadXml(xmlStr);
             XmlElement el = xdoc.DocumentElement;
             XmlNodeList xml = el.ChildNodes;
