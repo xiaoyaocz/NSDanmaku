@@ -191,7 +191,7 @@ namespace NSDanmaku.Controls
         public static readonly DependencyProperty BorderStyleProperty =
             DependencyProperty.Register("BorderStyle", typeof(int), typeof(Danmaku), new PropertyMetadata(0, new PropertyChangedCallback((d, args) =>
             {
-                var control= d as Danmaku;
+                var control = d as Danmaku;
                 control.borderStyle = (DanmakuBorderStyle)args.NewValue;
             })));
 
@@ -354,192 +354,6 @@ namespace NSDanmaku.Controls
 
         }
 
-        private Grid CreateControlShadow(DanmakuModel model)
-        {
-            //创建基础控件
-            TextBlock tx = new TextBlock();
-            DropShadowPanel dropShadowPanel = new DropShadowPanel()
-            {
-                BlurRadius = 6,
-                ShadowOpacity = 1,
-                OffsetX = 0,
-                OffsetY = 0,
-                Color = SetBorder(model.color)
-            };
-
-
-            Grid grid = new Grid();
-
-
-
-            tx.Text = model.text;
-            if (bold)
-            {
-                tx.FontWeight = FontWeights.Bold;
-            }
-            if (font != "")
-            {
-                tx.FontFamily = new FontFamily(font);
-            }
-            tx.Foreground = new SolidColorBrush(model.color);
-            //弹幕大小
-            double size = model.size * sizeZoom;
-            tx.FontSize = size;
-
-
-            dropShadowPanel.Content = tx;
-
-            grid.Children.Add(dropShadowPanel);
-            grid.Tag = model;
-            return grid;
-        }
-        private Grid CreateControlBorder(DanmakuModel model)
-        {
-            //创建基础控件
-            TextBlock tx = new TextBlock();
-            TextBlock tx2 = new TextBlock();
-            Grid grid = new Grid();
-
-
-            tx2.Text = model.text;
-            tx.Text = model.text;
-            if (bold)
-            {
-                tx.FontWeight = FontWeights.Bold;
-                tx2.FontWeight = FontWeights.Bold;
-            }
-            if (font != "")
-            {
-                tx.FontFamily = new FontFamily(font);
-                tx2.FontFamily = new FontFamily(font);
-            }
-            tx2.Foreground = new SolidColorBrush(SetBorder(model.color));
-            tx.Foreground = new SolidColorBrush(model.color);
-            //弹幕大小
-            double size = model.size * sizeZoom;
-
-            tx2.FontSize = size;
-            tx.FontSize = size;
-
-            tx2.Margin = new Thickness(1);
-            //grid包含弹幕文本信息
-
-            grid.Children.Add(tx2);
-            grid.Children.Add(tx);
-            grid.Tag = model;
-            return grid;
-        }
-        private Grid CreateControlNoBorder(DanmakuModel model)
-        {
-            //创建基础控件
-            TextBlock tx = new TextBlock();
-
-            Grid grid = new Grid();
-
-            tx.Text = model.text;
-            if (bold)
-            {
-                tx.FontWeight = FontWeights.Bold;
-            }
-            if (font != "")
-            {
-                tx.FontFamily = new FontFamily(font);
-            }
-            tx.Foreground = new SolidColorBrush(model.color);
-            //弹幕大小
-            double size = model.size * sizeZoom;
-
-            tx.FontSize = size;
-
-            grid.Children.Add(tx);
-            grid.Tag = model;
-            return grid;
-        }
-        private Grid CreateImageControl(BitmapImage image)
-        {
-            //创建基础控件
-            Image img = new Image();
-            img.Source = image;
-            Grid grid = new Grid();
-            DanmakuModel model = new DanmakuModel() { text = "666666" };
-            grid.Tag = model;
-            grid.Children.Add(img);
-            return grid;
-        }
-        private async Task<Grid> CreateControlBorder2(DanmakuModel model)
-        {
-
-            float size = (float)model.size * (float)sizeZoom;
-
-            CanvasDevice device = CanvasDevice.GetSharedDevice();
-            CanvasTextFormat fmt = new CanvasTextFormat() { FontSize = size };
-            if (bold)
-            {
-                fmt.FontWeight = FontWeights.Bold;
-            }
-            if (font != "")
-            {
-                fmt.FontFamily = font;
-            }
-            var myBitmap = new CanvasRenderTarget(device, model.text.Length * size, 34, 96);
-
-            CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, model.text, fmt, model.text.Length * size, 0);
-
-            CanvasGeometry combinedGeometry = CanvasGeometry.CreateText(canvasTextLayout);
-
-            using (var ds = myBitmap.CreateDrawingSession())
-            {
-
-                ds.FillGeometry(combinedGeometry, model.color);
-                ds.DrawGeometry(combinedGeometry, SetBorder(model.color), 1.0f);
-
-
-            }
-            Image image = new Image();
-            BitmapImage im = new BitmapImage();
-            using (InMemoryRandomAccessStream oStream = new InMemoryRandomAccessStream())
-            {
-                // Save the Win2D canvas renderer a stream.
-                await myBitmap.SaveAsync(oStream, CanvasBitmapFileFormat.Png, 1.0f);
-                // Stream our Win2D pixels into the Bitmap
-                await im.SetSourceAsync(oStream);
-            }
-            image.Source = im;
-            image.Stretch = Stretch.None;
-            Grid grid = new Grid();
-
-            grid.Tag = model;
-            grid.Children.Add(image);
-
-            return grid;
-
-        }
-
-
-
-        private Color SetBorder(Color textColor)
-        {
-            if (textColor.R < 100 && textColor.G < 100 && textColor.B < 100)
-            {
-                return Colors.White;
-            }
-            else if ((textColor.R > 200 && textColor.G < 100 && textColor.B < 100))
-            {
-                return Colors.White;
-            }
-            else if ((textColor.R < 100 && textColor.G > 200 && textColor.B < 100))
-            {
-                return Colors.White;
-            }
-            else if ((textColor.R < 100 && textColor.G < 100 && textColor.B > 200))
-            {
-                return Colors.White;
-            }
-            else
-            {
-                return Colors.Black;
-            }
-        }
 
 
         private int ComputeTopRow()
@@ -671,16 +485,16 @@ namespace NSDanmaku.Controls
             switch (borderStyle)
             {
                 case DanmakuBorderStyle.Default:
-                    grid = CreateControlBorder(m);
+                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.NoBorder:
-                    grid = CreateControlNoBorder(m);
+                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.Shadow:
-                    grid = CreateControlShadow(m);
+                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.BorderV2:
-                    grid = await CreateControlBorder2(m);
+                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
                     break;
                 default:
                     break;
@@ -740,7 +554,7 @@ namespace NSDanmaku.Controls
         public void AddRollImageDanmu(BitmapImage m)
         {
             Grid grid = null;
-            grid = CreateImageControl(m);
+            grid = DanmakuItemControl.CreateImageControl(m);
             var r = ComputeRollRow(grid);
             if (r == -1)
             {
@@ -807,16 +621,16 @@ namespace NSDanmaku.Controls
             switch (borderStyle)
             {
                 case DanmakuBorderStyle.Default:
-                    grid = CreateControlBorder(m);
+                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.NoBorder:
-                    grid = CreateControlNoBorder(m);
+                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.Shadow:
-                    grid = CreateControlShadow(m);
+                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.BorderV2:
-                    grid = await CreateControlBorder2(m);
+                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
                     break;
                 default:
                     break;
@@ -903,16 +717,16 @@ namespace NSDanmaku.Controls
             switch (borderStyle)
             {
                 case DanmakuBorderStyle.Default:
-                    grid = CreateControlBorder(m);
+                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.NoBorder:
-                    grid = CreateControlNoBorder(m);
+                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.Shadow:
-                    grid = CreateControlShadow(m);
+                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.BorderV2:
-                    grid = await CreateControlBorder2(m);
+                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
                     break;
                 default:
                     break;
@@ -973,16 +787,16 @@ namespace NSDanmaku.Controls
             switch (borderStyle)
             {
                 case DanmakuBorderStyle.Default:
-                    grid = CreateControlBorder(m);
+                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.NoBorder:
-                    grid = CreateControlNoBorder(m);
+                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.Shadow:
-                    grid = CreateControlShadow(m);
+                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
                     break;
                 case DanmakuBorderStyle.BorderV2:
-                    grid = await CreateControlBorder2(m);
+                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
                     break;
                 default:
                     break;
@@ -1025,36 +839,31 @@ namespace NSDanmaku.Controls
             moveStoryboard.Begin();
         }
 
-        public void AddPositionDanmu(DanmakuModel model)
+        public async void AddPositionDanmu(DanmakuModel m)
         {
-            var data = Newtonsoft.Json.JsonConvert.DeserializeObject<object[]>(model.text);
-            //创建基础控件
+            var data = Newtonsoft.Json.JsonConvert.DeserializeObject<object[]>(m.text);
+            m.text = data[4].ToString().Replace("/n", "\r\n");
+            Grid grid = null;
+            var fontFamily = data[data.Length - 2].ToString();
+            switch (borderStyle)
+            {
+                case DanmakuBorderStyle.Default:
+                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, fontFamily, m);
+                    break;
+                case DanmakuBorderStyle.NoBorder:
+                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, fontFamily, m);
+                    break;
+                case DanmakuBorderStyle.Shadow:
+                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, fontFamily, m);
+                    break;
+                case DanmakuBorderStyle.BorderV2:
+                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, fontFamily, m);
+                    break;
+                default:
+                    break;
+            }
 
-            TextBlock tx2 = new TextBlock();
-            tx2.Foreground = new SolidColorBrush(SetBorder(model.color));
-            tx2.Margin = new Thickness(1);
-
-            TextBlock tx = new TextBlock();
-            Grid grid = new Grid();
-
-            tx.FontWeight = FontWeights.Bold;
-            tx2.FontWeight = FontWeights.Bold;
-            tx.Foreground = new SolidColorBrush(model.color);
-            //弹幕大小
-            double size = model.size * sizeZoom;
-            tx.FontSize = size;
-            tx2.FontSize = size;
-
-            tx.Text = data[4].ToString().Replace("/n", "\r\n");
-            tx2.Text = data[4].ToString().Replace("/n", "\r\n");
-
-            tx.FontFamily = new FontFamily(data[data.Length - 2].ToString());
-            tx2.FontFamily = new FontFamily(data[data.Length - 2].ToString());
-
-            grid.Children.Add(tx2);
-            grid.Children.Add(tx);
-
-            grid.Tag = model;
+            grid.Tag = m;
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Center;
 
