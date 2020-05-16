@@ -12,7 +12,7 @@ namespace NSDanmaku
         public static int ToInt32(this object obj)
         {
 
-            if (int.TryParse(obj.ToString(), out var value))
+            if (int.TryParse(obj?.ToString(), out var value))
             {
                 return value;
             }
@@ -21,6 +21,18 @@ namespace NSDanmaku
                 return 0;
             }
         }
+        public static double ToDouble(this object obj)
+        {
+            if (double.TryParse(obj?.ToString(), out var value))
+            {
+                return value;
+            }
+            else
+            {
+                return 0d;
+            }
+        }
+
         public static Color ToColor(this string obj)
         {
 

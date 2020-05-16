@@ -875,19 +875,19 @@ namespace NSDanmaku.Controls
 
             if (data.Length > 7)
             {
-                X = Convert.ToDouble(data[0]);
-                Y = Convert.ToDouble(data[1]);
+                X =data[0].ToDouble();
+                Y = data[1].ToDouble();
 
-                toX = Convert.ToDouble(data[7]);
-                toY = Convert.ToDouble(data[8]);
+                toX =data[7].ToDouble();
+                toY = data[8].ToDouble();
 
-                dur = Convert.ToDouble(data[10]);
+                dur = data[10].ToDouble();
 
             }
             else
             {
-                toX = Convert.ToDouble(data[0]);
-                toY = Convert.ToDouble(data[1]);
+                toX = data[0].ToDouble();
+                toY =data[1].ToDouble();
             }
             if (toX < 1 && toY < 1)
             {
@@ -902,8 +902,8 @@ namespace NSDanmaku.Controls
 
             if (data.Length >= 7)
             {
-                var rotateZ = Convert.ToDouble(data[5]);
-                var rotateY = Convert.ToDouble(data[6]);
+                var rotateZ = data[5].ToDouble();
+                var rotateY = data[6].ToDouble();
                 PlaneProjection projection = new PlaneProjection();
                 projection.RotationZ = -rotateZ;
                 projection.RotationY = rotateY;
@@ -916,10 +916,10 @@ namespace NSDanmaku.Controls
             canvas.Children.Add(grid);
 
 
-            double dmDuration = Convert.ToDouble(data[3]);
+            double dmDuration = data[3].ToDouble();
             var opacitys = data[2].ToString().Split('-');
-            double opacityFrom = Convert.ToDouble(opacitys[0]);
-            double opacityTo = Convert.ToDouble(opacitys[1]);
+            double opacityFrom = opacitys[0].ToDouble();
+            double opacityTo = opacitys[1].ToDouble();
 
             //创建故事版
             Storyboard moveStoryboard = new Storyboard();
