@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -33,36 +34,40 @@ namespace Demo
             timer.Tick += Timer_Tick;
         }
 
-
-
-        private void btn_AddRoll_Click(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            danmaku.AddRollDanmu(new NSDanmaku.Model.DanmakuModel()
+            base.OnNavigatedTo(e);
+            danmaku.DanmakuStyle = NSDanmaku.Model.DanmakuBorderStyle.Border;
+        }
+
+        private async void btn_AddRoll_Click(object sender, RoutedEventArgs e)
+        {
+            await danmaku.AddScrollDanmu(new NSDanmaku.Model.DanmakuModel()
             {
                 color = Colors.White,
-                location = NSDanmaku.Model.DanmakuLocation.Roll,
+                location = NSDanmaku.Model.DanmakuLocation.Scroll,
                 size = 25,
-                text = text.Text
+                text = text.Text 
             }, ck_own.IsChecked.Value);
         }
 
-        private void btn_AddTop_Click(object sender, RoutedEventArgs e)
+        private async void btn_AddTop_Click(object sender, RoutedEventArgs e)
         {
-            danmaku.AddTopDanmu(new NSDanmaku.Model.DanmakuModel()
+            await danmaku.AddTopDanmu(new NSDanmaku.Model.DanmakuModel()
             {
                 color = Colors.Blue,
-                location = NSDanmaku.Model.DanmakuLocation.Roll,
+                location = NSDanmaku.Model.DanmakuLocation.Scroll,
                 size = 25,
                 text = text.Text
             }, ck_own.IsChecked.Value);
         }
 
-        private void btn_AddBottom_Click(object sender, RoutedEventArgs e)
+        private async void btn_AddBottom_Click(object sender, RoutedEventArgs e)
         {
-            danmaku.AddBottomDanmu(new NSDanmaku.Model.DanmakuModel()
+           await danmaku.AddBottomDanmu(new NSDanmaku.Model.DanmakuModel()
             {
                 color = Colors.Red,
-                location = NSDanmaku.Model.DanmakuLocation.Roll,
+                location = NSDanmaku.Model.DanmakuLocation.Scroll,
                 size = 25,
                 text = text.Text
             }, ck_own.IsChecked.Value);
@@ -72,32 +77,19 @@ namespace Demo
         {
             danmaku.ClearAll();
         }
-        private void Timer_Tick(object sender, object e)
+        private async void Timer_Tick(object sender, object e)
         {
-
             var danmu = danmakus.Where(x => Convert.ToInt32(x.time) == slider.Value);
             foreach (var item in danmu)
             {
                 try
                 {
-                    switch (item.location)
-                    {
-                        case NSDanmaku.Model.DanmakuLocation.Top:
-                            danmaku.AddTopDanmu(item, false);
-                            break;
-                        case NSDanmaku.Model.DanmakuLocation.Bottom:
-                            danmaku.AddBottomDanmu(item, false);
-                            break;
-                        default:
-                            danmaku.AddRollDanmu(item, false);
-                            break;
-                    }
+                    await danmaku.AddDanmu(item, false);
                 }
                 catch (Exception)
                 {
                     Debug.WriteLine("Can't add danmaku:" + item.source);
                 }
-
             }
             slider.Value++;
         }
@@ -109,7 +101,7 @@ namespace Demo
                 try
                 {
                     NSDanmaku.Helper.DanmakuParse danmakuParse = new NSDanmaku.Helper.DanmakuParse();
-                    danmakus = await danmakuParse.ParseBiliBili(29892777);
+                    danmakus = await danmakuParse.ParseBiliBili(11311248);
                 }
                 catch (Exception)
                 {
@@ -137,12 +129,12 @@ namespace Demo
 
         private void ck_HideRoll_Checked(object sender, RoutedEventArgs e)
         {
-            danmaku.HideDanmaku(NSDanmaku.Model.DanmakuLocation.Roll);
+            danmaku.HideDanmaku(NSDanmaku.Model.DanmakuLocation.Scroll);
         }
 
         private void ck_HideRoll_Unchecked(object sender, RoutedEventArgs e)
         {
-            danmaku.ShowDanmaku(NSDanmaku.Model.DanmakuLocation.Roll);
+            danmaku.ShowDanmaku(NSDanmaku.Model.DanmakuLocation.Scroll);
         }
     }
 }

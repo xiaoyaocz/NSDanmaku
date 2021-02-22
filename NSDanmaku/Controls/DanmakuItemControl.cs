@@ -179,9 +179,9 @@ namespace NSDanmaku.Controls
             float size = (float)model.size * (float)sizeZoom;
 
             CanvasDevice device = CanvasDevice.GetSharedDevice();
+           
             CanvasTextFormat fmt = new CanvasTextFormat() { FontSize = size };
             var tb = new TextBlock { Text = model.text, FontSize = size, };
-
 
             if (bold)
             {
@@ -196,25 +196,25 @@ namespace NSDanmaku.Controls
             tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
 
-            var myBitmap = new CanvasRenderTarget(device, (float)tb.ActualWidth, (float)tb.ActualHeight, 96);
-
-            CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, model.text, fmt, (float)tb.ActualWidth, (float)tb.ActualHeight);
-
+            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height, 96);
+           
+            CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, model.text, fmt, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height);
+            
             CanvasGeometry combinedGeometry = CanvasGeometry.CreateText(canvasTextLayout);
 
             using (var ds = myBitmap.CreateDrawingSession())
             {
-
+                ds.Clear(Colors.Transparent);
+                ds.DrawGeometry(combinedGeometry, GetBorderColor(model.color), 2f,new CanvasStrokeStyle() {
+                    DashStyle = CanvasDashStyle.Solid
+                });
                 ds.FillGeometry(combinedGeometry, model.color);
-                ds.DrawGeometry(combinedGeometry, GetBorderColor(model.color), 0.4f);
             }
             Image image = new Image();
             BitmapImage im = new BitmapImage();
             using (InMemoryRandomAccessStream oStream = new InMemoryRandomAccessStream())
             {
-                // Save the Win2D canvas renderer a stream.
                 await myBitmap.SaveAsync(oStream, CanvasBitmapFileFormat.Png, 1.0f);
-                // Stream our Win2D pixels into the Bitmap
                 await im.SetSourceAsync(oStream);
             }
             image.Source = im;

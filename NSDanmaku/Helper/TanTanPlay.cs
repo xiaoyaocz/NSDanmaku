@@ -61,7 +61,7 @@ namespace NSDanmaku.Helper
                     foreach (var item in m.comments)
                     {
                         var datas = item.p.Split(',');
-                        var location = DanmakuLocation.Roll;
+                        var location = DanmakuLocation.Scroll;
                         switch (datas[1])
                         {
                             case "7":
@@ -74,7 +74,7 @@ namespace NSDanmaku.Helper
                                 location = DanmakuLocation.Top;
                                 break;
                             default:
-                                location = DanmakuLocation.Roll;
+                                location = DanmakuLocation.Scroll;
                                 break;
                         }
                         list.Add(new DanmakuModel()

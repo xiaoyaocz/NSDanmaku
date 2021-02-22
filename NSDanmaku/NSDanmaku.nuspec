@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>NSDanmaku</id>
-    <version>1.5.2</version>
+    <version>2.0.0</version>
     <title>NSDanmaku</title>
     <authors>xiaoyaocz</authors>
     <owners>xiaoyaocz</owners>
     <projectUrl>https://github.com/xiaoyaocz/NSDanmaku</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>一个简单的UWP 弹幕引擎</description>
-    <copyright>Copyright 2020</copyright>
+    <description>一个简单的UWP弹幕控件</description>
+    <copyright>Copyright 2021</copyright>
     <tags>UWP</tags>
     <dependencies>
       <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="6.0.0" />

@@ -10,11 +10,10 @@
     d:DesignWidth="400">
 
     <Grid x:Name="gv">
-        <TextBlock x:Name="tb_test" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="25" Foreground="White"></TextBlock>
         <Canvas x:Name="canvas">
          
         </Canvas>
-        <Grid x:Name="grid_Roll" >
+        <Grid x:Name="grid_Scroll" >
 
         </Grid>
         <Grid x:Name="grid_Top" >

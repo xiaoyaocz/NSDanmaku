@@ -59,10 +59,10 @@ namespace NSDanmaku.Helper
                 {
                     try
                     {
-                        string heheda = item.Attributes["p"].Value;
-                        string[] haha = heheda.Split(',');
-                        var location = DanmakuLocation.Roll;
-                        switch (haha[1])
+                        string text = item.Attributes["p"].Value;
+                        string[] txtSplit = text.Split(',');
+                        var location = DanmakuLocation.Scroll;
+                        switch (txtSplit[1])
                         {
                             case "7":
                                 location = DanmakuLocation.Position;
@@ -74,20 +74,20 @@ namespace NSDanmaku.Helper
                                 location = DanmakuLocation.Top;
                                 break;
                             default:
-                                location = DanmakuLocation.Roll;
+                                location = DanmakuLocation.Scroll;
                                 break;
                         }
                         ls.Add(new DanmakuModel
                         {
-                            time = double.Parse(haha[0]),
-                            time_s = Convert.ToInt32(double.Parse(haha[0])),
+                            time = double.Parse(txtSplit[0]),
+                            time_s = Convert.ToInt32(double.Parse(txtSplit[0])),
                             location = location,
-                            size = double.Parse(haha[2]),
-                            color = haha[3].ToColor(),
-                            sendTime = haha[4],
-                            pool = haha[5],
-                            sendID = haha[6],
-                            rowID = haha[7],
+                            size = double.Parse(txtSplit[2]),
+                            color = txtSplit[3].ToColor(),
+                            sendTime = txtSplit[4],
+                            pool = txtSplit[5],
+                            sendID = txtSplit[6],
+                            rowID = txtSplit[7],
                             text = item.InnerText,
                             source = item.OuterXml,
                             fromSite = DanmakuSite.Bilibili

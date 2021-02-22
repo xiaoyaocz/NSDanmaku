@@ -13,7 +13,7 @@ namespace NSDanmaku.Model
         /// <summary>
         /// 滚动弹幕Model1-3
         /// </summary>
-        Roll,
+        Scroll,
         /// <summary>
         /// 顶部弹幕Model5
         /// </summary>
@@ -42,7 +42,7 @@ namespace NSDanmaku.Model
         Default=0,
         NoBorder=1,
         Shadow=2,
-        BorderV2=3
+        Border=3
     }
     public enum DanmakuMode
     {

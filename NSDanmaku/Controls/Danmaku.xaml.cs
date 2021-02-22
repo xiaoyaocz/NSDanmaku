@@ -25,8 +25,6 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
-
 namespace NSDanmaku.Controls
 {
     public sealed partial class Danmaku : UserControl
@@ -34,23 +32,24 @@ namespace NSDanmaku.Controls
         public Danmaku()
         {
             this.InitializeComponent();
-            notHideSubtitle = false;
-            bold = false;
-            font = "";
+            DanmakuArea = 1.0;
+            DanmakuBold = false;
+            DanmakuFontFamily = "";
         }
+        #region 弹幕属性
         /// <summary>
         /// 字体大小缩放，电脑推荐默认1.0，手机推荐0.5
         /// </summary>
-        public double sizeZoom
+        public double DanmakuSizeZoom
         {
-            get { return (double)GetValue(sizeZoomProperty); }
-            set { SetValue(sizeZoomProperty, value); }
+            get { return (double)GetValue(DanmakuSizeZoomProperty); }
+            set { SetValue(DanmakuSizeZoomProperty, value); }
         }
-        // Using a DependencyProperty as the backing store for sizeZoom.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty sizeZoomProperty =
-            DependencyProperty.Register("sizeZoom", typeof(double), typeof(Danmaku), new PropertyMetadata(1.0, OnSizeZoomChanged));
+       
+        public static readonly DependencyProperty DanmakuSizeZoomProperty =
+            DependencyProperty.Register("DanmakuSizeZoom", typeof(double), typeof(Danmaku), new PropertyMetadata(1.0, OnDanmakuSizeZoomChanged));
 
-        private static void OnSizeZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnDanmakuSizeZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var value = Convert.ToDouble(e.NewValue);
             if (value > 3)
@@ -61,15 +60,15 @@ namespace NSDanmaku.Controls
             {
                 value = 0.1;
             }
-            //sizeZoom = value;
+            //DanmakuSizeZoom = value;
 
-            ((Danmaku)d).SetFontSizeZoom(value);
+            ((Danmaku)d).SetFontDanmakuSizeZoom(value);
         }
-        private void SetFontSizeZoom(double value)
+        private void SetFontDanmakuSizeZoom(double value)
         {
-            tb_test.FontSize = 25 * value;
-            SetRows();
-            foreach (var item in grid_Roll.Children)
+           
+            SetRows(this.ActualHeight);
+            foreach (var item in grid_Scroll.Children)
             {
                 var grid = item as Grid;
                 var m = grid.Tag as DanmakuModel;
@@ -77,7 +76,7 @@ namespace NSDanmaku.Controls
                 {
                     if (tb is TextBlock)
                     {
-                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * sizeZoom;
+                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * DanmakuSizeZoom;
                     }
                 }
 
@@ -90,7 +89,7 @@ namespace NSDanmaku.Controls
                 {
                     if (tb is TextBlock)
                     {
-                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * sizeZoom;
+                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * DanmakuSizeZoom;
                     }
                 }
 
@@ -103,7 +102,7 @@ namespace NSDanmaku.Controls
                 {
                     if (tb is TextBlock)
                     {
-                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * sizeZoom;
+                        (tb as TextBlock).FontSize = Convert.ToInt32(m.size) * DanmakuSizeZoom;
                     }
                 }
 
@@ -111,493 +110,264 @@ namespace NSDanmaku.Controls
         }
 
         /// <summary>
-        /// 滚动弹幕速度
+        /// 滚动弹幕动画持续时间,单位:秒,越小弹幕移动速度越快
         /// </summary>
-        public int speed
+        public int DanmakuDuration
         {
-            get { return (int)GetValue(speedProperty); }
-            set { SetValue(speedProperty, value); }
+            get { return (int)GetValue(DanmakuDurationProperty); }
+            set { SetValue(DanmakuDurationProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for speed.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty speedProperty =
-            DependencyProperty.Register("speed", typeof(int), typeof(Danmaku), new PropertyMetadata(10, OnSpeedChanged));
-        private static void OnSpeedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static readonly DependencyProperty DanmakuDurationProperty =
+            DependencyProperty.Register("DanmakuDuration", typeof(int), typeof(Danmaku), new PropertyMetadata(10, OnDanmakuDurationChanged));
+        private static void OnDanmakuDurationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var value = Convert.ToInt32(e.NewValue);
             if (value <= 0)
             {
                 value = 1;
             }
-           ((Danmaku)d).SetSpeed(value);
+           ((Danmaku)d).SetDanmakuDuration(value);
         }
-        public void SetSpeed(int value)
+        public void SetDanmakuDuration(int value)
         {
-            speed = value;
-            //foreach (var item in rollStoryList)
-            //{
-            //    item.Duration = new Duration(TimeSpan.FromSeconds(value));
-            //}
+            DanmakuDuration = value;
         }
 
 
-
-        public bool bold
+        /// <summary>
+        /// 弹幕是否加粗
+        /// </summary>
+        public bool DanmakuBold
         {
-            get { return (bool)GetValue(boldProperty); }
-            set { SetValue(boldProperty, value); }
+            get { return (bool)GetValue(DanmakuBoldProperty); }
+            set { SetValue(DanmakuBoldProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for bold.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty boldProperty =
-            DependencyProperty.Register("bold", typeof(bool), typeof(Danmaku), new PropertyMetadata(0));
+        public static readonly DependencyProperty DanmakuBoldProperty =
+            DependencyProperty.Register("DanmakuBold", typeof(bool), typeof(Danmaku), new PropertyMetadata(0));
 
 
-
-        public string font
+        /// <summary>
+        /// 弹幕字体名称
+        /// </summary>
+        public string DanmakuFontFamily
         {
-            get { return (string)GetValue(fontProperty); }
-            set { SetValue(fontProperty, value); }
+            get { return (string)GetValue(DanmakuFontFamilyProperty); }
+            set { SetValue(DanmakuFontFamilyProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for font.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty fontProperty =
-            DependencyProperty.Register("font", typeof(string), typeof(Danmaku), new PropertyMetadata(0));
+     
+        public static readonly DependencyProperty DanmakuFontFamilyProperty =
+            DependencyProperty.Register("DanmakuFontFamily", typeof(string), typeof(Danmaku), new PropertyMetadata(0));
 
 
         /// <summary>
         /// 弹幕样式
         /// </summary>
-        public DanmakuBorderStyle borderStyle
+        public DanmakuBorderStyle DanmakuStyle
         {
-            get { return (DanmakuBorderStyle)GetValue(borderStyleProperty); }
-            set { SetValue(borderStyleProperty, value); }
+            get { return (DanmakuBorderStyle)GetValue(DanmakuStyleProperty); }
+            set { SetValue(DanmakuStyleProperty, value); }
         }
-
-        // Using a DependencyProperty as the backing store for borderStyle.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty borderStyleProperty =
-            DependencyProperty.Register("borderStyle", typeof(DanmakuBorderStyle), typeof(Danmaku), new PropertyMetadata(DanmakuBorderStyle.Default));
-
-
-
-
-        public int BorderStyle
-        {
-            get { return (int)GetValue(BorderStyleProperty); }
-            set { SetValue(BorderStyleProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for BorderStyle.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty BorderStyleProperty =
-            DependencyProperty.Register("BorderStyle", typeof(int), typeof(Danmaku), new PropertyMetadata(0, new PropertyChangedCallback((d, args) =>
-            {
-                var control = d as Danmaku;
-                control.borderStyle = (DanmakuBorderStyle)args.NewValue;
-            })));
-
-
-
+        public static readonly DependencyProperty DanmakuStyleProperty =
+          DependencyProperty.Register("DanmakuStyle", typeof(DanmakuBorderStyle), typeof(Danmaku), new PropertyMetadata(DanmakuBorderStyle.Default));
 
 
         /// <summary>
-        /// 弹幕动画管理
+        /// 弹幕显示区域，取值0.1-1.0
         /// </summary>
+        public double DanmakuArea
+        {
+            get { return (double)GetValue(DanmakuAreaProperty); }
+            set { SetValue(DanmakuAreaProperty, value); }
+        }
+       
+        public static readonly DependencyProperty DanmakuAreaProperty =
+            DependencyProperty.Register("DanmakuArea", typeof(double), typeof(Danmaku), new PropertyMetadata(1, OnDanmakuAreaChanged));
+
+        private static void OnDanmakuAreaChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var value = Convert.ToDouble(e.NewValue);
+            if (value <=0)
+            {
+                value = 0.1;
+            }
+            if (value > 1)
+            {
+                value = 1;
+            }
+
+           ((Danmaku)d).SetDanmakuArea(value);
+        }
+        public void SetDanmakuArea(double value)
+        {
+            DanmakuArea = value;
+        }
+        #endregion
+
+        //动画管理
         List<Storyboard> topBottomStoryList = new List<Storyboard>();
         List<Storyboard> rollStoryList = new List<Storyboard>();
         List<Storyboard> positionStoryList = new List<Storyboard>();
 
-        /// <summary>
-        /// 弹幕模式
-        /// </summary>
-        public DanmakuMode danmakuMode = DanmakuMode.Video;
-
-        /// <summary>
-        /// 防挡字幕
-        /// </summary>
-        public bool notHideSubtitle
-        {
-            get { return (bool)GetValue(notHideSubtitleProperty); }
-            set { SetValue(notHideSubtitleProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for notHideSubtitle.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty notHideSubtitleProperty =
-            DependencyProperty.Register("notHideSubtitle", typeof(bool), typeof(Danmaku), new PropertyMetadata(false));
-
-
-        public void InitializeDanmaku(DanmakuMode mode, double fontZoom, int _speed, DanmakuBorderStyle style)
-        {
-            sizeZoom = fontZoom;
-            speed = _speed;
-
-            borderStyle = style;
-            SetRows();
-        }
-
-
         protected override Size MeasureOverride(Size availableSize)
         {
-            SetRows();
+            SetRows(availableSize.Height);
             return base.MeasureOverride(availableSize);
         }
 
-        private void SetRows()
+        private void SetRows(double height)
         {
-            if (tb_test.ActualHeight == 0)
-            {
-                return;
-            }
-            var rowHieght = tb_test.ActualHeight;
-
-            var topHieght = grid_Top.ActualHeight;
-            var pageHieght = grid_Roll.ActualHeight;
+            
+            var txt = new TextBlock() { 
+                Text="测试test",
+                FontSize=25*DanmakuSizeZoom,
+            };
+            txt.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            var rowHieght = txt.DesiredSize.Height;
+          
+           
+          
             //将全部行去除
             grid_Top.RowDefinitions.Clear();
             grid_Bottom.RowDefinitions.Clear();
-            grid_Roll.RowDefinitions.Clear();
+            grid_Scroll.RowDefinitions.Clear();
 
-            int num = Convert.ToInt32(topHieght / rowHieght);
-            int pnum = Convert.ToInt32(pageHieght / rowHieght);
+            int num = Convert.ToInt32(height / rowHieght);
+           // int pnum = Convert.ToInt32(height / rowHieght);
 
+            //for (int i = 0; i < num; i++)
+            //{
+            //    grid_Bottom.RowDefinitions.Add(new RowDefinition());
+            //    grid_Top.RowDefinitions.Add(new RowDefinition());
+            //}
             for (int i = 0; i < num; i++)
             {
                 grid_Bottom.RowDefinitions.Add(new RowDefinition());
                 grid_Top.RowDefinitions.Add(new RowDefinition());
-            }
-            for (int i = 0; i < pnum; i++)
-            {
-                grid_Roll.RowDefinitions.Add(new RowDefinition());
+                grid_Scroll.RowDefinitions.Add(new RowDefinition());
             }
         }
-
-        /// <summary>
-        /// 暂停弹幕
-        /// </summary>
-        public void PauseDanmaku()
+        private int GetTopAvailableRow()
         {
-            foreach (var item in topBottomStoryList)
-            {
-                item.Pause();
-            }
-            foreach (var item in rollStoryList)
-            {
-                item.Pause();
-            }
-            foreach (var item in positionStoryList)
-            {
-                item.Pause();
-            }
-        }
-        /// <summary>
-        /// 继续弹幕
-        /// </summary>
-        public void ResumeDanmaku()
-        {
-            foreach (var item in topBottomStoryList)
-            {
-                item.Resume();
-            }
-            foreach (var item in rollStoryList)
-            {
-                item.Resume();
-            }
-            foreach (var item in positionStoryList)
-            {
-                item.Resume();
-            }
-        }
-
-        public void Remove(DanmakuModel danmaku)
-        {
-            switch (danmaku.location)
-            {
-                case DanmakuLocation.Top:
-
-                    foreach (Grid item in grid_Top.Children)
-                    {
-                        if (item.Tag as DanmakuModel == danmaku)
-                        {
-                            grid_Top.Children.Remove(item);
-                        }
-                    }
-                    break;
-                case DanmakuLocation.Bottom:
-                    foreach (Grid item in grid_Bottom.Children)
-                    {
-                        if (item.Tag as DanmakuModel == danmaku)
-                        {
-                            grid_Bottom.Children.Remove(item);
-                        }
-                    }
-                    break;
-                case DanmakuLocation.Other:
-                    foreach (Grid item in grid_Roll.Children)
-                    {
-                        if (item.Tag as DanmakuModel == danmaku)
-                        {
-                            grid_Roll.Children.Remove(item);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void ClearAll()
-        {
-            topBottomStoryList.Clear();
-            rollStoryList.Clear();
-            grid_Bottom.Children.Clear();
-            grid_Top.Children.Clear();
-            grid_Roll.Children.Clear();
-
-        }
-
-
-
-        private int ComputeTopRow()
-        {
-            var rows = 0;
-            var max = grid_Top.RowDefinitions.Count;
-            if (notHideSubtitle && grid_Top.RowDefinitions.Count >= 5)
-            {
-
-                max = grid_Top.RowDefinitions.Count - 3;
-            }
+          
+            var max = grid_Top.RowDefinitions.Count/2;
+           
             for (int i = 0; i < max; i++)
             {
-                rows = i;
-                bool has = false;
-                foreach (Grid item in grid_Top.Children)
+                
+                var row = grid_Top.Children.FirstOrDefault(x=>Grid.GetRow((x as Grid)) == i);
+                if (row!=null)
                 {
-                    var row = Grid.GetRow(item);
-                    if (row == i)
-                    {
-                        has = true;
-                        break;
-                    }
+                    continue;
                 }
-                if (!has)
+                else
                 {
-                    return rows;
+                    return i;
                 }
-                if (i == max - 1)
-                {
-                    return -1;
-                }
+                
             }
-            return rows;
+            return -1;
         }
-        private int ComputeBottomRow()
+        private int GetBottomAvailableRow()
         {
 
-            var rows = grid_Bottom.RowDefinitions.Count;
-            if (rows == 0)
+            var max = grid_Bottom.RowDefinitions.Count/2;
+            for (int i = 1; i <= max; i++)
             {
-                SetRows();
-                rows = grid_Bottom.RowDefinitions.Count - 1;
-            }
-            for (int i = grid_Bottom.RowDefinitions.Count - 1; i >= 0; i--)
-            {
-                rows = i;
-                bool has = false;
-                foreach (Grid item in grid_Bottom.Children)
+                var rowNum = grid_Bottom.RowDefinitions.Count - i;
+                var row = grid_Bottom.Children.FirstOrDefault(x => Grid.GetRow((x as Grid)) == rowNum);
+                if (row != null)
                 {
-                    var row = Grid.GetRow(item);
-                    if (row == i)
-                    {
-                        has = true;
-                        break;
-                    }
+                    continue;
                 }
-                if (!has)
+                else
                 {
-                    return rows;
+                    return rowNum;
                 }
             }
-            return rows;
-        }
-        private int ComputeRollRow(Grid item)
-        {
-            var rows = 0;
+            //for (int i = grid_Bottom.RowDefinitions.Count; i >= 0; i--)
+            //{
+            //    var row = grid_Bottom.Children.FirstOrDefault(x => Grid.GetRow((x as Grid)) == i);
+            //    if (row != null)
+            //    {
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        if (i>=max)
+            //        {
+            //            return i;
+            //        }
+                    
+            //    }
 
-            var max = grid_Roll.RowDefinitions.Count;
-            if (notHideSubtitle)
-            {
-                max = grid_Roll.RowDefinitions.Count / 2;
-            }
+            //}
+            return -1;
+        }
+        private int GetScrollAvailableRow(Grid item)
+        {
+            var width = grid_Scroll.ActualWidth;
+            //计算弹幕尺寸
+            item.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            var newWidth = item.DesiredSize.Width;
+            if (newWidth <= 0) return -1;
+           
+            var max = grid_Scroll.RowDefinitions.Count*DanmakuArea;
+           
             for (int i = 0; i < max; i++)
             {
-                rows = i;
-                bool has = false;
-                var ls = grid_Roll.Children.Where(x => Grid.GetRow((x as Grid)) == i);
-                if (ls.Count() != 0)
+                //1、检查当前行是否存在弹幕
+                var lastItem=grid_Scroll.Children.LastOrDefault(x => Grid.GetRow((x as Grid)) == i);
+                if (lastItem == null)
                 {
-                    var last = ls.Last() as Grid;
-                    double num = 0.8;
-                    if ((item.Tag as DanmakuModel).text.Length > 15)
-                    {
-                        num = 0.6;
-                    }
-                    if ((last.RenderTransform as TranslateTransform).X > grid_Roll.ActualWidth * num)
-                    {
-                        has = true;
-                    }
+                    return i;
                 }
-
-
-
-
-                //foreach (Grid item in grid_Roll.Children)
-                //{
-                //    var row = Grid.GetRow(item);
-
-                //    if (row == i)
-                //    {
-                //        if ((item.RenderTransform as TranslateTransform).X > grid_Roll.ActualWidth / 1.2)
-                //        {
-                //            has = true;
-                //            break;
-                //        }
-                //    }
-                //}
-
-                if (!has)
+              
+                var lastWidth = (lastItem as Grid).ActualWidth;
+                var lastX = (lastItem.RenderTransform as TranslateTransform).X;
+                
+                //2、前弹幕必须已经完全从右侧移动完毕
+                if (lastX > width- lastWidth)
                 {
-                    return rows;
+                    continue;
                 }
-                if (i == max - 1)
+                //3、后弹幕速度小于等于前弹幕速度
+                var lastSpeed = (lastWidth + width) / DanmakuDuration;
+                var newSpeed = (newWidth + width) / DanmakuDuration;
+                if (newSpeed<= lastSpeed)
                 {
-                    return -1;
+                    return i;
                 }
+                //4、弹幕移动期间不会重叠
+                var runDistance =width- lastX;
+                var t1 = (runDistance - newWidth) / (newSpeed - lastSpeed);
+                var t2 = lastX / lastSpeed;
+                if (t1 > t2)
+                {
+                    return i;
+                }    
             }
-            return rows;
+            return -1;
         }
-        /// <summary>
-        /// 添加滚动弹幕
-        /// </summary>
-        /// <param name="m">参数</param>
-        /// <param name="own">是否自己发送的</param>
-        public async void AddRollDanmu(DanmakuModel m, bool own)
+
+
+        private async Task<Grid> CreateNewDanmuControl(DanmakuModel m)
         {
-            Grid grid = null;
-            switch (borderStyle)
+            switch (DanmakuStyle)
             {
-                case DanmakuBorderStyle.Default:
-                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
-                    break;
                 case DanmakuBorderStyle.NoBorder:
-                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
-                    break;
+                    return DanmakuItemControl.CreateControlNoBorder((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
                 case DanmakuBorderStyle.Shadow:
-                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.BorderV2:
-                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
-                    break;
+                    return DanmakuItemControl.CreateControlShadow((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
+                case DanmakuBorderStyle.Border:
+                    return await DanmakuItemControl.CreateControlBorder((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
                 default:
-                    break;
+                    return DanmakuItemControl.CreateControlOverlap((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
             }
-            if (own)
-            {
-                grid.BorderBrush = new SolidColorBrush(m.color);
-                grid.BorderThickness = new Thickness(1);
-            }
-            var r = ComputeRollRow(grid);
-            if (r == -1)
-            {
-                return;
-            }
-            Grid.SetRow(grid, r);
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Center;
-            grid_Roll.Children.Add(grid);
-            grid_Roll.UpdateLayout();
-
-            TranslateTransform moveTransform = new TranslateTransform();
-            moveTransform.X = gv.ActualWidth;
-            grid.RenderTransform = moveTransform;
-
-            //创建动画
-            Duration duration = new Duration(TimeSpan.FromSeconds(speed));
-            DoubleAnimation myDoubleAnimationX = new DoubleAnimation();
-            myDoubleAnimationX.Duration = duration;
-            //创建故事版
-            Storyboard moveStoryboard = new Storyboard();
-            moveStoryboard.Duration = duration;
-            myDoubleAnimationX.To = -(grid.ActualWidth);//到达
-            moveStoryboard.Children.Add(myDoubleAnimationX);
-            Storyboard.SetTarget(myDoubleAnimationX, moveTransform);
-            //故事版加入动画
-            Storyboard.SetTargetProperty(myDoubleAnimationX, "X");
-            rollStoryList.Add(moveStoryboard);
-
-            moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
-            {
-                grid_Roll.Children.Remove(grid);
-                grid.Children.Clear();
-                grid = null;
-                rollStoryList.Remove(moveStoryboard);
-                moveStoryboard.Stop();
-                moveStoryboard = null;
-            });
-            moveStoryboard.Begin();
-
 
         }
-
-        /// <summary>
-        /// 添加图片滚动弹幕
-        /// </summary>
-        /// <param name="m">参数</param>
-        public void AddRollImageDanmu(BitmapImage m)
-        {
-            Grid grid = null;
-            grid = DanmakuItemControl.CreateImageControl(m);
-            var r = ComputeRollRow(grid);
-            if (r == -1)
-            {
-                return;
-            }
-            Grid.SetRow(grid, r);
-            grid.HorizontalAlignment = HorizontalAlignment.Left;
-            grid.VerticalAlignment = VerticalAlignment.Center;
-            grid_Roll.Children.Add(grid);
-            grid_Roll.UpdateLayout();
-
-            TranslateTransform moveTransform = new TranslateTransform();
-            moveTransform.X = gv.ActualWidth;
-            grid.RenderTransform = moveTransform;
-
-            //创建动画
-            Duration duration = new Duration(TimeSpan.FromSeconds(speed));
-            DoubleAnimation myDoubleAnimationX = new DoubleAnimation();
-            myDoubleAnimationX.Duration = duration;
-            //创建故事版
-            Storyboard moveStoryboard = new Storyboard();
-            moveStoryboard.Duration = duration;
-            myDoubleAnimationX.To = -(grid.ActualWidth);//到达
-            moveStoryboard.Children.Add(myDoubleAnimationX);
-            Storyboard.SetTarget(myDoubleAnimationX, moveTransform);
-            //故事版加入动画
-            Storyboard.SetTargetProperty(myDoubleAnimationX, "X");
-            rollStoryList.Add(moveStoryboard);
-
-            moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
-            {
-
-                grid_Roll.Children.Remove(grid);
-                grid = null;
-                rollStoryList.Remove(moveStoryboard);
-
-            });
-            moveStoryboard.Begin();
-
-
-        }
-
-
         /// <summary>
         /// 添加直播滚动弹幕
         /// </summary>
@@ -614,33 +384,16 @@ namespace NSDanmaku.Controls
             {
                 text = text,
                 color = color.Value,
-                location = DanmakuLocation.Roll,
+                location = DanmakuLocation.Scroll,
                 size = 25
             };
-            Grid grid = null;
-            switch (borderStyle)
-            {
-                case DanmakuBorderStyle.Default:
-                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.NoBorder:
-                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.Shadow:
-                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.BorderV2:
-                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
-                    break;
-                default:
-                    break;
-            }
+            Grid grid = await CreateNewDanmuControl(m);
             if (own)
             {
                 grid.BorderBrush = new SolidColorBrush(color.Value);
                 grid.BorderThickness = new Thickness(1);
             }
-            var r = ComputeRollRow(grid);
+            var r = GetScrollAvailableRow(grid);
             if (r == -1)
             {
                 return;
@@ -648,15 +401,15 @@ namespace NSDanmaku.Controls
             Grid.SetRow(grid, r);
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Center;
-            grid_Roll.Children.Add(grid);
-            grid_Roll.UpdateLayout();
+            grid_Scroll.Children.Add(grid);
+            grid_Scroll.UpdateLayout();
 
             TranslateTransform moveTransform = new TranslateTransform();
             moveTransform.X = gv.ActualWidth;
             grid.RenderTransform = moveTransform;
 
             //创建动画
-            Duration duration = new Duration(TimeSpan.FromSeconds(speed));
+            Duration duration = new Duration(TimeSpan.FromSeconds(DanmakuDuration));
             DoubleAnimation myDoubleAnimationX = new DoubleAnimation();
             myDoubleAnimationX.Duration = duration;
             //创建故事版
@@ -671,7 +424,7 @@ namespace NSDanmaku.Controls
 
             moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
             {
-                grid_Roll.Children.Remove(grid);
+                grid_Scroll.Children.Remove(grid);
                 grid.Children.Clear();
                 grid = null;
                 rollStoryList.Remove(moveStoryboard);
@@ -681,63 +434,159 @@ namespace NSDanmaku.Controls
             });
             moveStoryboard.Begin();
         }
-
-        public void AddDanmu(DanmakuModel m, bool own)
+        /// <summary>
+        /// 添加一条弹幕
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="own"></param>
+        /// <returns></returns>
+        public async Task AddDanmu(DanmakuModel m, bool own)
         {
             switch (m.location)
             {
-                case DanmakuLocation.Roll:
-                    AddRollDanmu(m, own);
+                case DanmakuLocation.Scroll:
+                    await AddScrollDanmu(m, own);
                     break;
                 case DanmakuLocation.Top:
-                    AddTopDanmu(m, own);
+                    await AddTopDanmu(m, own);
                     break;
                 case DanmakuLocation.Bottom:
-                    AddBottomDanmu(m, own);
+                    await AddBottomDanmu(m, own);
                     break;
                 case DanmakuLocation.Position:
-                    AddPositionDanmu(m);
+                    await AddPositionDanmu(m);
                     break;
                 default:
-                    AddRollDanmu(m, own);
+                    await AddScrollDanmu(m, own);
                     break;
             }
         }
 
+       
+        /// <summary>
+        /// 添加滚动弹幕
+        /// </summary>
+        /// <param name="m">参数</param>
+        /// <param name="own">是否自己发送的</param>
+        public async Task AddScrollDanmu(DanmakuModel m, bool own)
+        {
+            Grid grid = await CreateNewDanmuControl(m);
 
+            if (own)
+            {
+                grid.BorderBrush = new SolidColorBrush(m.color);
+                grid.BorderThickness = new Thickness(1);
+            }
+            var r = GetScrollAvailableRow(grid);
+            if (r == -1)
+            {
+                grid = null;
+                return;
+            }
+
+            Grid.SetRow(grid, r);
+            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.VerticalAlignment = VerticalAlignment.Center;
+            grid_Scroll.Children.Add(grid);
+            grid_Scroll.UpdateLayout();
+
+            TranslateTransform moveTransform = new TranslateTransform();
+            moveTransform.X = gv.ActualWidth;
+            grid.RenderTransform = moveTransform;
+
+            //创建动画
+            Duration duration = new Duration(TimeSpan.FromSeconds(DanmakuDuration));
+            DoubleAnimation myDoubleAnimationX = new DoubleAnimation();
+            myDoubleAnimationX.Duration = duration;
+            //创建故事版
+            Storyboard moveStoryboard = new Storyboard();
+            moveStoryboard.Duration = duration;
+            myDoubleAnimationX.To = -(grid.ActualWidth);//到达
+            moveStoryboard.Children.Add(myDoubleAnimationX);
+            Storyboard.SetTarget(myDoubleAnimationX, moveTransform);
+            //故事版加入动画
+            Storyboard.SetTargetProperty(myDoubleAnimationX, "X");
+            rollStoryList.Add(moveStoryboard);
+
+            moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
+            {
+                grid_Scroll.Children.Remove(grid);
+                grid.Children.Clear();
+                grid = null;
+                rollStoryList.Remove(moveStoryboard);
+                moveStoryboard.Stop();
+                moveStoryboard = null;
+            });
+            moveStoryboard.Begin();
+
+
+        }
+
+        /// <summary>
+        /// 添加图片滚动弹幕
+        /// </summary>
+        /// <param name="m">参数</param>
+        public void AddScrollImageDanmu(BitmapImage m)
+        {
+            Grid grid = null;
+            grid = DanmakuItemControl.CreateImageControl(m);
+            var r = GetScrollAvailableRow(grid);
+            if (r == -1)
+            {
+                return;
+            }
+            Grid.SetRow(grid, r);
+            grid.HorizontalAlignment = HorizontalAlignment.Left;
+            grid.VerticalAlignment = VerticalAlignment.Center;
+            grid_Scroll.Children.Add(grid);
+            grid_Scroll.UpdateLayout();
+
+            TranslateTransform moveTransform = new TranslateTransform();
+            moveTransform.X = gv.ActualWidth;
+            grid.RenderTransform = moveTransform;
+
+            //创建动画
+            Duration duration = new Duration(TimeSpan.FromSeconds(DanmakuDuration));
+            DoubleAnimation myDoubleAnimationX = new DoubleAnimation();
+            myDoubleAnimationX.Duration = duration;
+            //创建故事版
+            Storyboard moveStoryboard = new Storyboard();
+            moveStoryboard.Duration = duration;
+            myDoubleAnimationX.To = -(grid.ActualWidth);//到达
+            moveStoryboard.Children.Add(myDoubleAnimationX);
+            Storyboard.SetTarget(myDoubleAnimationX, moveTransform);
+            //故事版加入动画
+            Storyboard.SetTargetProperty(myDoubleAnimationX, "X");
+            rollStoryList.Add(moveStoryboard);
+
+            moveStoryboard.Completed += new EventHandler<object>((senders, obj) =>
+            {
+
+                grid_Scroll.Children.Remove(grid);
+                grid = null;
+                rollStoryList.Remove(moveStoryboard);
+
+            });
+            moveStoryboard.Begin();
+
+
+        }
         /// <summary>
         ///  添加顶部弹幕
         /// </summary>
         /// <param name="m">参数</param>
         /// <param name="own">是否自己发送的</param>
-        public async void AddTopDanmu(DanmakuModel m, bool own)
+        public async Task AddTopDanmu(DanmakuModel m, bool own)
         {
 
-            Grid grid = null;
-            switch (borderStyle)
-            {
-                case DanmakuBorderStyle.Default:
-                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.NoBorder:
-                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.Shadow:
-                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.BorderV2:
-                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
-                    break;
-                default:
-                    break;
-            }
+            Grid grid = await CreateNewDanmuControl(m);
             if (own)
             {
                 grid.BorderBrush = new SolidColorBrush(m.color);
                 grid.BorderThickness = new Thickness(1);
             }
 
-            var r = ComputeTopRow();
+            var r = GetTopAvailableRow();
             if (r == -1)
             {
                 return;
@@ -781,26 +630,9 @@ namespace NSDanmaku.Controls
         /// </summary>
         /// <param name="m">参数</param>
         /// <param name="own">是否自己发送的</param>
-        public async void AddBottomDanmu(DanmakuModel m, bool own)
+        public async Task AddBottomDanmu(DanmakuModel m, bool own)
         {
-            Grid grid = null;
-            switch (borderStyle)
-            {
-                case DanmakuBorderStyle.Default:
-                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.NoBorder:
-                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.Shadow:
-                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, font, m);
-                    break;
-                case DanmakuBorderStyle.BorderV2:
-                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, font, m);
-                    break;
-                default:
-                    break;
-            }
+            Grid grid = await CreateNewDanmuControl(m);
             if (own)
             {
                 grid.BorderBrush = new SolidColorBrush(m.color);
@@ -808,7 +640,12 @@ namespace NSDanmaku.Controls
             }
             grid.HorizontalAlignment = HorizontalAlignment.Center;
             grid.VerticalAlignment = VerticalAlignment.Top;
-            Grid.SetRow(grid, ComputeBottomRow());
+            var row = GetBottomAvailableRow();
+            if (row == -1)
+            {
+                return;
+            }
+            Grid.SetRow(grid, row);
             grid_Bottom.Children.Add(grid);
 
 
@@ -838,31 +675,17 @@ namespace NSDanmaku.Controls
             });
             moveStoryboard.Begin();
         }
-
-        public async void AddPositionDanmu(DanmakuModel m)
+        /// <summary>
+        /// 添加定位弹幕
+        /// </summary>
+        /// <param name="m"></param>
+        public async Task AddPositionDanmu(DanmakuModel m)
         {
             var data = Newtonsoft.Json.JsonConvert.DeserializeObject<object[]>(m.text);
             m.text = data[4].ToString().Replace("/n", "\r\n");
-            Grid grid = null;
-            var fontFamily = data[data.Length - 2].ToString();
-            switch (borderStyle)
-            {
-                case DanmakuBorderStyle.Default:
-                    grid = DanmakuItemControl.CreateControlOverlap((float)sizeZoom, bold, fontFamily, m);
-                    break;
-                case DanmakuBorderStyle.NoBorder:
-                    grid = DanmakuItemControl.CreateControlNoBorder((float)sizeZoom, bold, fontFamily, m);
-                    break;
-                case DanmakuBorderStyle.Shadow:
-                    grid = DanmakuItemControl.CreateControlShadow((float)sizeZoom, bold, fontFamily, m);
-                    break;
-                case DanmakuBorderStyle.BorderV2:
-                    grid = await DanmakuItemControl.CreateControlBorder((float)sizeZoom, bold, fontFamily, m);
-                    break;
-                default:
-                    break;
-            }
-
+             Grid grid = await CreateNewDanmuControl(m); ;
+            var DanmakuFontFamilyFamily = data[data.Length - 2].ToString();
+            
             grid.Tag = m;
             grid.HorizontalAlignment = HorizontalAlignment.Left;
             grid.VerticalAlignment = VerticalAlignment.Center;
@@ -977,8 +800,95 @@ namespace NSDanmaku.Controls
             });
             moveStoryboard.Begin();
         }
+        #region 弹幕控制方法
+        /// <summary>
+        /// 暂停弹幕
+        /// </summary>
+        public void PauseDanmaku()
+        {
+            foreach (var item in topBottomStoryList)
+            {
+                item.Pause();
+            }
+            foreach (var item in rollStoryList)
+            {
+                item.Pause();
+            }
+            foreach (var item in positionStoryList)
+            {
+                item.Pause();
+            }
+        }
+        /// <summary>
+        /// 继续弹幕
+        /// </summary>
+        public void ResumeDanmaku()
+        {
+            foreach (var item in topBottomStoryList)
+            {
+                item.Resume();
+            }
+            foreach (var item in rollStoryList)
+            {
+                item.Resume();
+            }
+            foreach (var item in positionStoryList)
+            {
+                item.Resume();
+            }
+        }
+        /// <summary>
+        /// 移除指定弹幕
+        /// </summary>
+        /// <param name="danmaku"></param>
+        public void Remove(DanmakuModel danmaku)
+        {
+            switch (danmaku.location)
+            {
+                case DanmakuLocation.Top:
 
+                    foreach (Grid item in grid_Top.Children)
+                    {
+                        if (item.Tag as DanmakuModel == danmaku)
+                        {
+                            grid_Top.Children.Remove(item);
+                        }
+                    }
+                    break;
+                case DanmakuLocation.Bottom:
+                    foreach (Grid item in grid_Bottom.Children)
+                    {
+                        if (item.Tag as DanmakuModel == danmaku)
+                        {
+                            grid_Bottom.Children.Remove(item);
+                        }
+                    }
+                    break;
+                case DanmakuLocation.Other:
+                    foreach (Grid item in grid_Scroll.Children)
+                    {
+                        if (item.Tag as DanmakuModel == danmaku)
+                        {
+                            grid_Scroll.Children.Remove(item);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        /// <summary>
+        /// 清空弹幕
+        /// </summary>
+        public void ClearAll()
+        {
+            topBottomStoryList.Clear();
+            rollStoryList.Clear();
+            grid_Bottom.Children.Clear();
+            grid_Top.Children.Clear();
+            grid_Scroll.Children.Clear();
 
+        }
 
         /// <summary>
         /// 读取屏幕上的全部弹幕
@@ -1002,9 +912,9 @@ namespace NSDanmaku.Controls
                     danmakus.Add(item.Tag as DanmakuModel);
                 }
             }
-            if (danmakuLocation == null || danmakuLocation == DanmakuLocation.Roll)
+            if (danmakuLocation == null || danmakuLocation == DanmakuLocation.Scroll)
             {
-                foreach (Grid item in grid_Roll.Children)
+                foreach (Grid item in grid_Scroll.Children)
                 {
                     danmakus.Add(item.Tag as DanmakuModel);
                 }
@@ -1020,8 +930,8 @@ namespace NSDanmaku.Controls
         {
             switch (location)
             {
-                case DanmakuLocation.Roll:
-                    grid_Roll.Visibility = Visibility.Collapsed;
+                case DanmakuLocation.Scroll:
+                    grid_Scroll.Visibility = Visibility.Collapsed;
                     break;
                 case DanmakuLocation.Top:
                     grid_Top.Visibility = Visibility.Collapsed;
@@ -1042,8 +952,8 @@ namespace NSDanmaku.Controls
         {
             switch (location)
             {
-                case DanmakuLocation.Roll:
-                    grid_Roll.Visibility = Visibility.Visible;
+                case DanmakuLocation.Scroll:
+                    grid_Scroll.Visibility = Visibility.Visible;
                     break;
                 case DanmakuLocation.Top:
                     grid_Top.Visibility = Visibility.Visible;
@@ -1055,5 +965,6 @@ namespace NSDanmaku.Controls
                     break;
             }
         }
+        #endregion
     }
 }
