@@ -96,8 +96,10 @@ namespace NSDanmaku.Model
         public DanmakuSite fromSite { get; set; }
 
         public string source { get; set; }
-
-
+        /// <summary>
+        /// 弹幕权重
+        /// </summary>
+        public int weight { get; set; }
         public SolidColorBrush colorBrush
         {
             get

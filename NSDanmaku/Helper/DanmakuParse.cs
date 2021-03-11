@@ -1,6 +1,7 @@
 ﻿using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -90,12 +91,15 @@ namespace NSDanmaku.Helper
                             rowID = txtSplit[7],
                             text = item.InnerText,
                             source = item.OuterXml,
-                            fromSite = DanmakuSite.Bilibili
+                            fromSite = DanmakuSite.Bilibili,
+                            //xml弹幕不返回此字段
+                            weight=99
                         });
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        Debug.WriteLine(ex.Message);
+                        continue;
                     }
 
                 }
