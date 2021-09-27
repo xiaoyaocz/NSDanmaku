@@ -36,8 +36,9 @@ namespace Demo
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+
             base.OnNavigatedTo(e);
-            danmaku.DanmakuStyle = NSDanmaku.Model.DanmakuBorderStyle.Border;
+            danmaku.DanmakuStyle = NSDanmaku.Model.DanmakuBorderStyle.Stroke;
         }
 
         private async void btn_AddRoll_Click(object sender, RoutedEventArgs e)
@@ -137,4 +138,6 @@ namespace Demo
             danmaku.ShowDanmaku(NSDanmaku.Model.DanmakuLocation.Scroll);
         }
     }
+
+
 }

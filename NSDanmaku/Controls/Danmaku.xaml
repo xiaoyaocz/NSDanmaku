@@ -9,7 +9,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid x:Name="gv">
+    <Grid x:Name="gv" local:DanmakuExtensions.ClipToBounds="True">
         <Canvas x:Name="canvas">
          
         </Canvas>

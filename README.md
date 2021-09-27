@@ -61,10 +61,20 @@ danmaku.ShowDanmaku(...);
 - `DanmakuFontFamily` 弹幕字体名称
 
 - `DanmakuStyle` 弹幕样式，可选以下四种样式：
-	- Default：两个TextBlock重叠
-	- NoBorder：无边框，单TextBlock
-	- Shadow：阴影
-	- Border：边框
+	- Overlap：两个TextBlock重叠，模拟描边
+	- WithoutStroke：无描边，单TextBlock
+	- Stroke：描边
+
+## 2.1.0修改
+- 移除Microsoft.Toolkit.Uwp.UI.Controls
+
+- 移除DanmakuStyle命名，移除Shadow样式
+
+- 优化描边弹幕DPI
+
+- 防止弹幕超出边界
+
+- 升级引用的包版本
 
 ## 参考资料
 [https://www.zhihu.com/question/370464345](https://www.zhihu.com/question/370464345)

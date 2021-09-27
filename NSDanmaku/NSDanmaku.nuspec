@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>NSDanmaku</id>
-    <version>2.0.1</version>
+    <version>2.1.0</version>
     <title>NSDanmaku</title>
     <authors>xiaoyaocz</authors>
     <owners>xiaoyaocz</owners>
@@ -12,9 +12,8 @@
     <copyright>Copyright 2021</copyright>
     <tags>UWP</tags>
     <dependencies>
-      <dependency id="Microsoft.Toolkit.Uwp.UI.Controls" version="6.0.0" />
-      <dependency id="Newtonsoft.Json" version="12.0.3" />
-      <dependency id="Win2D.uwp" version="1.24.0" />
+      <dependency id="Newtonsoft.Json" version="13.0.1" />
+      <dependency id="Win2D.uwp" version="1.26.0" />
     </dependencies>
   </metadata>
   <files>

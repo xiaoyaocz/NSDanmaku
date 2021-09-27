@@ -1,7 +1,6 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
@@ -171,7 +170,7 @@ namespace NSDanmaku.Controls
             set { SetValue(DanmakuStyleProperty, value); }
         }
         public static readonly DependencyProperty DanmakuStyleProperty =
-          DependencyProperty.Register("DanmakuStyle", typeof(DanmakuBorderStyle), typeof(Danmaku), new PropertyMetadata(DanmakuBorderStyle.Default));
+          DependencyProperty.Register("DanmakuStyle", typeof(DanmakuBorderStyle), typeof(Danmaku), new PropertyMetadata(DanmakuBorderStyle.Stroke));
 
 
         /// <summary>
@@ -357,11 +356,9 @@ namespace NSDanmaku.Controls
         {
             switch (DanmakuStyle)
             {
-                case DanmakuBorderStyle.NoBorder:
+                case DanmakuBorderStyle.WithoutStroke:
                     return DanmakuItemControl.CreateControlNoBorder((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
-                case DanmakuBorderStyle.Shadow:
-                    return DanmakuItemControl.CreateControlShadow((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
-                case DanmakuBorderStyle.Border:
+                case DanmakuBorderStyle.Stroke:
                     return await DanmakuItemControl.CreateControlBorder((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
                 default:
                     return DanmakuItemControl.CreateControlOverlap((float)DanmakuSizeZoom, DanmakuBold, DanmakuFontFamily, m);
@@ -457,7 +454,7 @@ namespace NSDanmaku.Controls
                     await AddPositionDanmu(m);
                     break;
                 default:
-                    await AddScrollDanmu(m, own);
+                    //await AddScrollDanmu(m, own);
                     break;
             }
         }

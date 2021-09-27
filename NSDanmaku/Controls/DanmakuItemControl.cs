@@ -1,7 +1,6 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
@@ -21,53 +20,7 @@ namespace NSDanmaku.Controls
 {
     public  class DanmakuItemControl
     {
-        /// <summary>
-        /// 创建阴影弹幕
-        /// </summary>
-        /// <param name="sizeZoom"></param>
-        /// <param name="bold"></param>
-        /// <param name="fontFamily"></param>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        public static Grid CreateControlShadow(float sizeZoom, bool bold, string fontFamily, DanmakuModel model)
-        {
-            //创建基础控件
-            TextBlock tx = new TextBlock();
-            DropShadowPanel dropShadowPanel = new DropShadowPanel()
-            {
-                BlurRadius = 6,
-                ShadowOpacity = 1,
-                OffsetX = 0,
-                OffsetY = 0,
-                Color = GetBorderColor(model.color)
-            };
-
-
-            Grid grid = new Grid();
-
-
-
-            tx.Text = model.text;
-            if (bold)
-            {
-                tx.FontWeight = FontWeights.Bold;
-            }
-            if (fontFamily != "")
-            {
-                tx.FontFamily = new FontFamily(fontFamily);
-            }
-            tx.Foreground = new SolidColorBrush(model.color);
-            //弹幕大小
-            double size = model.size * sizeZoom;
-            tx.FontSize = size;
-
-
-            dropShadowPanel.Content = tx;
-
-            grid.Children.Add(dropShadowPanel);
-            grid.Tag = model;
-            return grid;
-        }
+        private static Windows.Graphics.Display.DisplayInformation displayInformation =  Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
         /// <summary>
         /// 创建重叠弹幕
         /// </summary>
@@ -194,9 +147,8 @@ namespace NSDanmaku.Controls
                 tb.FontFamily = new FontFamily(fontFamily);
             }
             tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-
-            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height, 96);
+            
+            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height, displayInformation.LogicalDpi);
            
             CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, model.text, fmt, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height);
             
@@ -218,7 +170,7 @@ namespace NSDanmaku.Controls
                 await im.SetSourceAsync(oStream);
             }
             image.Source = im;
-            image.Stretch = Stretch.None;
+            image.Stretch = Stretch.Uniform;
             Grid grid = new Grid();
 
             grid.Tag = model;

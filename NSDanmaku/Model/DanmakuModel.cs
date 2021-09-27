@@ -39,10 +39,18 @@ namespace NSDanmaku.Model
     }
     public enum DanmakuBorderStyle
     {
-        Default=0,
-        NoBorder=1,
-        Shadow=2,
-        Border=3
+        /// <summary>
+        /// 重叠描边
+        /// </summary>
+        Overlap = 0,
+        /// <summary>
+        /// 无描边
+        /// </summary>
+        WithoutStroke = 1,
+        /// <summary>
+        /// 正常描边
+        /// </summary>
+        Stroke= 2
     }
     public enum DanmakuMode
     {

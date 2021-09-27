@@ -6,45 +6,48 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    xmlns:controls="using:NSDanmaku.Controls"
-    >
+    xmlns:ex="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:controls="using:NSDanmaku.Controls">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
 
-    <Grid Background="Gray">
-        <controls:Danmaku x:Name="danmaku"></controls:Danmaku>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBox x:Name="text" Width="400" PlaceholderText="弹幕文本" Text="这是一条测试弹幕233"></TextBox>
-         
-            <CheckBox x:Name="ck_own" HorizontalAlignment="Center">自己发送的</CheckBox>
-            
-            <Button x:Name="btn_AddRoll" HorizontalAlignment="Center" Click="btn_AddRoll_Click">添加滚动弹幕</Button>
-            <Button x:Name="btn_AddTop" HorizontalAlignment="Center" Click="btn_AddTop_Click">添加顶部弹幕</Button>
-            <Button x:Name="btn_AddBottom" HorizontalAlignment="Center" Click="btn_AddBottom_Click">添加底部弹幕</Button>
-            <Button x:Name="btn_Clear" HorizontalAlignment="Center" Click="btn_Clear_Click">清除全部弹幕</Button>
-            <Button x:Name="btn_GetAll" HorizontalAlignment="Center" Click="btn_GetAll_Click">读取全部弹幕</Button>
-        </StackPanel>
-        <StackPanel  VerticalAlignment="Bottom">
-            <TextBlock VerticalAlignment="Center">模拟播放</TextBlock>
-            <StackPanel Orientation="Horizontal">
-                <AppBarButton x:Name="btn_Play"  Click="btn_Play_Click" Icon="Play" Label="开始"></AppBarButton>
-                <AppBarButton x:Name="btn_Pause" Click="btn_Pause_Click" Icon="Pause"  Label="暂停"></AppBarButton>
-                <Slider x:Name="slider" Maximum="1380" Width="500" VerticalAlignment="Center"></Slider>
-                <TextBlock Margin="12 0" VerticalAlignment="Center"><Run Text="{Binding ElementName=slider,Path=Value,Mode=OneWay}"></Run>/<Run Text="{Binding ElementName=slider,Path=Maximum,Mode=OneWay}"></Run></TextBlock>
+        <Grid Background="Gray" >
+            <controls:Danmaku x:Name="danmaku" ></controls:Danmaku>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBox x:Name="text" Width="400" PlaceholderText="弹幕文本" Text="这是一条测试弹幕233"></TextBox>
+
+                <CheckBox x:Name="ck_own" HorizontalAlignment="Center">自己发送的</CheckBox>
+
+                <Button x:Name="btn_AddRoll" HorizontalAlignment="Center" Click="btn_AddRoll_Click">添加滚动弹幕</Button>
+                <Button x:Name="btn_AddTop" HorizontalAlignment="Center" Click="btn_AddTop_Click">添加顶部弹幕</Button>
+                <Button x:Name="btn_AddBottom" HorizontalAlignment="Center" Click="btn_AddBottom_Click">添加底部弹幕</Button>
+                <Button x:Name="btn_Clear" HorizontalAlignment="Center" Click="btn_Clear_Click">清除全部弹幕</Button>
+                <Button x:Name="btn_GetAll" HorizontalAlignment="Center" Click="btn_GetAll_Click">读取全部弹幕</Button>
             </StackPanel>
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12">
-            <CheckBox x:Name="ck_HideRoll" Checked="ck_HideRoll_Checked" Unchecked="ck_HideRoll_Unchecked">隐藏滚动弹幕</CheckBox>
-            <TextBlock>显示区域 <Run Text="{Binding ElementName=slider_area,Path=Value}"></Run></TextBlock>
-            <Slider x:Name="slider_area" Value="{Binding ElementName=danmaku,Path=DanmakuArea,Mode=TwoWay}" Width="200" StepFrequency="0.1"  Maximum="1" Minimum="0.1"></Slider>
-            <TextBlock>大小缩放 <Run Text="{Binding ElementName=slider_zoom,Path=Value}"></Run></TextBlock>
-            <Slider x:Name="slider_zoom" Value="{Binding ElementName=danmaku,Path=DanmakuSizeZoom,Mode=TwoWay}" Width="200" StepFrequency="0.05"  Maximum="2" Minimum="0.1"></Slider>
-            <TextBlock>透明度 <Run Text="{Binding ElementName=slider_opacity,Path=Value}"></Run></TextBlock>
-            <Slider x:Name="slider_opacity" Value="{Binding ElementName=danmaku,Path=Opacity,Mode=TwoWay}" Width="200" StepFrequency="0.1"  Maximum="1" Minimum="0.1"></Slider>
-            <TextBlock>滚动速度 <Run Text="{Binding ElementName=slider_speed,Path=Value}"></Run></TextBlock>
-            <Slider x:Name="slider_speed" Value="{Binding ElementName=danmaku,Path=DanmakuDuration,Mode=TwoWay}" Width="200" StepFrequency="1"  Maximum="30" Minimum="1"></Slider>
-        </StackPanel>
-        
-        
-        
-        
+            <StackPanel  VerticalAlignment="Bottom">
+                <TextBlock VerticalAlignment="Center">模拟播放</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <AppBarButton x:Name="btn_Play"  Click="btn_Play_Click" Icon="Play" Label="开始"></AppBarButton>
+                    <AppBarButton x:Name="btn_Pause" Click="btn_Pause_Click" Icon="Pause"  Label="暂停"></AppBarButton>
+                    <Slider x:Name="slider" Maximum="1380" Width="500" VerticalAlignment="Center"></Slider>
+                    <TextBlock Margin="12 0" VerticalAlignment="Center"><Run Text="{Binding ElementName=slider,Path=Value,Mode=OneWay}"></Run>/<Run Text="{Binding ElementName=slider,Path=Maximum,Mode=OneWay}"></Run></TextBlock>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="12">
+                <CheckBox x:Name="ck_HideRoll" Checked="ck_HideRoll_Checked" Unchecked="ck_HideRoll_Unchecked">隐藏滚动弹幕</CheckBox>
+                <TextBlock>显示区域 <Run Text="{Binding ElementName=slider_area,Path=Value}"></Run></TextBlock>
+                <Slider x:Name="slider_area" Value="{Binding ElementName=danmaku,Path=DanmakuArea,Mode=TwoWay}" Width="200" StepFrequency="0.1"  Maximum="1" Minimum="0.1"></Slider>
+                <TextBlock>大小缩放 <Run Text="{Binding ElementName=slider_zoom,Path=Value}"></Run></TextBlock>
+                <Slider x:Name="slider_zoom" Value="{Binding ElementName=danmaku,Path=DanmakuSizeZoom,Mode=TwoWay}" Width="200" StepFrequency="0.05"  Maximum="2" Minimum="0.1"></Slider>
+                <TextBlock>透明度 <Run Text="{Binding ElementName=slider_opacity,Path=Value}"></Run></TextBlock>
+                <Slider x:Name="slider_opacity" Value="{Binding ElementName=danmaku,Path=Opacity,Mode=TwoWay}" Width="200" StepFrequency="0.1"  Maximum="1" Minimum="0.1"></Slider>
+                <TextBlock>滚动速度 <Run Text="{Binding ElementName=slider_speed,Path=Value}"></Run></TextBlock>
+                <Slider x:Name="slider_speed" Value="{Binding ElementName=danmaku,Path=DanmakuDuration,Mode=TwoWay}" Width="200" StepFrequency="1"  Maximum="30" Minimum="1"></Slider>
+            </StackPanel>
+        </Grid>
     </Grid>
+  
 </Page>
