@@ -60,7 +60,7 @@ danmaku.ShowDanmaku(...);
 
 - `DanmakuFontFamily` 弹幕字体名称
 
-- `DanmakuStyle` 弹幕样式，可选以下四种样式：
+- `DanmakuStyle` 弹幕样式，可选以下三种样式：
 	- Overlap：两个TextBlock重叠，模拟描边
 	- WithoutStroke：无描边，单TextBlock
 	- Stroke：描边
