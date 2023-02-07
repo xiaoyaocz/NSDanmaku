@@ -26,7 +26,7 @@ namespace NSDanmaku.Helper
         public async Task<List<episodes>> Search(string keyword)
         {
 
-            var results = await webHelper.GetResults(new Uri("https://api.acplay.net/api/v2/search/episodes?anime=" + Uri.EscapeDataString(keyword)));
+            var results = await webHelper.GetResults(new Uri("https://api.dandanplay.net/api/v2/search/episodes?anime=" + Uri.EscapeDataString(keyword)));
             var m = JsonConvert.DeserializeObject<TantanSearchModel>(results);
             if (m.success)
             {
@@ -53,7 +53,7 @@ namespace NSDanmaku.Helper
         {
             try
             {
-                var results = await webHelper.GetResults(new Uri("https://api.acplay.net/api/v2/comment/" + episodeId));
+                var results = await webHelper.GetResults(new Uri("https://api.dandanplay.net/api/v2/comment/" + episodeId));
                 var m = JsonConvert.DeserializeObject<CommentModel>(results);
                 List<DanmakuModel> list = new List<DanmakuModel>();
                 if (m.comments != null)

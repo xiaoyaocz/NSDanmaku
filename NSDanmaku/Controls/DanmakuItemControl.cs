@@ -5,6 +5,7 @@ using NSDanmaku.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -182,34 +183,8 @@ namespace NSDanmaku.Controls
 
         public static Color GetBorderColor(Color textColor)
         {
-            if (textColor.R <= 80)
-            {
-                return Colors.White;
-            }
-            else
-            {
-                return Colors.Black;
-            }
-            //if (textColor.R < 100 && textColor.G < 100 && textColor.B < 100)
-            //{
-            //    return Colors.White;
-            //}
-            //else if ((textColor.R > 200 && textColor.G < 100 && textColor.B < 100))
-            //{
-            //    return Colors.White;
-            //}
-            //else if ((textColor.R < 100 && textColor.G > 200 && textColor.B < 100))
-            //{
-            //    return Colors.White;
-            //}
-            //else if ((textColor.R < 100 && textColor.G < 100 && textColor.B > 200))
-            //{
-            //    return Colors.White;
-            //}
-            //else
-            //{
-            //    return Colors.Black;
-            //}
+            var brightness = ((textColor.R * 299) + (textColor.G * 587) + (textColor.B * 114)) / 1000;
+            return brightness > 70? Colors.Black: Colors.White;
         }
     }
 }

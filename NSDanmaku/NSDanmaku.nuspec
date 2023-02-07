@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>NSDanmaku</id>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <title>NSDanmaku</title>
     <authors>xiaoyaocz</authors>
     <owners>xiaoyaocz</owners>
     <projectUrl>https://github.com/xiaoyaocz/NSDanmaku</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>一个简单的UWP弹幕控件</description>
-    <copyright>Copyright 2021</copyright>
+    <copyright>Copyright 2023</copyright>
     <tags>UWP</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="13.0.1" />
