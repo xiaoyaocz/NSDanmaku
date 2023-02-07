@@ -21,7 +21,6 @@ namespace NSDanmaku.Controls
 {
     public  class DanmakuItemControl
     {
-        private static Windows.Graphics.Display.DisplayInformation displayInformation =  Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
         /// <summary>
         /// 创建重叠弹幕
         /// </summary>
@@ -129,7 +128,10 @@ namespace NSDanmaku.Controls
         /// <returns></returns>
         public static async Task<Grid> CreateControlBorder(float sizeZoom,bool bold, string fontFamily, DanmakuModel model)
         {
-
+            if (Danmaku.LogicalDpi <= 0)
+            {
+                Danmaku.InitDanmakuDpi();
+            }
             float size = (float)model.size * (float)sizeZoom;
 
             CanvasDevice device = CanvasDevice.GetSharedDevice();
@@ -149,7 +151,7 @@ namespace NSDanmaku.Controls
             }
             tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             
-            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height, displayInformation.LogicalDpi);
+            var myBitmap = new CanvasRenderTarget(device, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height, Danmaku.LogicalDpi);
            
             CanvasTextLayout canvasTextLayout = new CanvasTextLayout(device, model.text, fmt, (float)tb.DesiredSize.Width, (float)tb.DesiredSize.Height);
             

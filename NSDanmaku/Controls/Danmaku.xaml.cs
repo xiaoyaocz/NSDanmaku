@@ -28,6 +28,25 @@ namespace NSDanmaku.Controls
 {
     public sealed partial class Danmaku : UserControl
     {
+        public static float LogicalDpi { get; set; } = 0;
+        /// <summary>
+        /// 初始化弹幕DPI
+        /// </summary>
+        public static void InitDanmakuDpi()
+        {
+            try
+            {
+                Windows.Graphics.Display.DisplayInformation displayInformation = Windows.Graphics.Display.DisplayInformation.GetForCurrentView();
+                LogicalDpi = displayInformation.LogicalDpi;
+            }
+            catch (Exception)
+            {
+                LogicalDpi = 96f;
+            }
+           
+        }
+
+
         public Danmaku()
         {
             this.InitializeComponent();
